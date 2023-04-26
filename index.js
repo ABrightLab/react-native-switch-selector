@@ -151,16 +151,49 @@ export default class SwitchSelector extends Component {
 
     const { selected, sliderWidth } = this.state;
 
+    // `displayBorder` returns the border right styling for fields in the tab switcher
+    const displayBorder = (selectedIndex, index) => {
+      let isBorder = false;
+      if (index !== options.length - 1) {
+        // To add the border right stylings when the selected index is in position 0
+        if (selectedIndex === 0 && index !== 0) {
+          isBorder = true;
+        }
+        // To add the border right stylings when the selected index is not in first and last index
+        else if (selectedIndex > 0 && selectedIndex !== options.length - 1 && (index !== selectedIndex - 1 && index !== selectedIndex)) {
+          isBorder = true;
+        }
+        // To add the border right stylings when the selected index is in last index
+        else if (selectedIndex === options.length - 1 && index !== selectedIndex - 1) {
+          isBorder = true;
+        }
+
+      }
+      
+      return isBorder;
+    }
+
     const optionsMap = options.map((element, index) => {
       const isSelected = selected === index;
-
       return (
         <TouchableOpacity
           {...touchableProps}
           key={index}
           disabled={disabled || element.disabled}
           style={[
-            styles.button,
+            displayBorder(selected, index) ? {
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRightWidth: 1,
+              borderColor: '#D9D4C5',
+            } : {
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
             isSelected ? selectedTextContainerStyle : textContainerStyle,
           ]}
           onPress={() => this.toggleItem(index)}
